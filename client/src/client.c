@@ -38,17 +38,18 @@ int main(void)
 	log_info (logger, "Lei la IP %s y puerto %s \n", ip, puerto);
 	log_info (logger, "VALOR leido de la config %s", valor);
 
-	/* ---------------- LEER DE CONSOLA ---------------- */
-
-	leer_consola(logger);
-
 	/*---------------------------------------------------PARTE 3-------------------------------------------------------------*/
 
 	// ADVERTENCIA: Antes de continuar, tenemos que asegurarnos que el servidor esté corriendo para poder conectarnos a él
 
 	// Creamos una conexión hacia el servidor
+
 	conexion = crear_conexion(ip, puerto);
 
+/* ---------------- LEER DE CONSOLA ---------------- */
+
+	leer_consola(logger);
+	
 	// Enviamos al servidor el valor de CLAVE como mensaje
 	enviar_mensaje ("Hola como andas", conexion);
 
@@ -89,6 +90,7 @@ t_config* iniciar_config(void)
 void leer_consola(t_log* logger)
 {
 	char* leido;
+
 // El resto, las vamos leyendo y logueando hasta recibir un string vacío
 	do {
 	// ¡No te olvides de liberar las lineas antes de regresar!
@@ -97,20 +99,31 @@ void leer_consola(t_log* logger)
 		leido = readline("> ");
 		log_info (logger, ">> %s", leido);
 	} while (strcmp (leido, "") != 0)
-	
 }
 
 void paquete(int conexion)
 {
 	// Ahora toca lo divertido!
-	char* leido;
-	t_paquete* paquete;
+	char* leido == NULL;
+	t_paquete* paquete = crear_paquete ();
 
 	// Leemos y esta vez agregamos las lineas al paquete
+	leido = readline ("> ");
 
+	while (strcmp(leido, "") != 0){
+		agregar_a_paquete (paquete, leido, strlen(leido) + 1);
+		free (leido);
+		leido = readline ("> ");
+	}
 
-	// ¡No te olvides de liberar las líneas y el paquete antes de regresar!
-	
+// ¡No te olvides de liberar las líneas y el paquete antes de regresar!
+	free (leido);
+// ENVIAR PAQUETE
+	enviar_paquete (paquete, conexion);
+
+// Eliminar paquete
+	eliminar_paquete (paquete);
+
 }
 
 void terminar_programa(int conexion, t_log* logger, t_config* config)
