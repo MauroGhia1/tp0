@@ -20,7 +20,7 @@ int main(void)
 	// Usando el logger creado previamente
 	// Escribi: "Hola! Soy un log"
 
-	log_info (logger, "Soy un log!");
+	log_info (logger, "Hola! Soy un log!");
 
 	/* ---------------- ARCHIVOS DE CONFIGURACION ---------------- */
 
@@ -66,11 +66,11 @@ int main(void)
 
 t_log* iniciar_logger(void)
 {
-	t_log* nuevo_logger;
+	t_log* nuevo_logger = log_create ("cliente.log","CLIENTE_LOGGER_TP0", 1, LOG_LEVEL_INFO);
 
-	if (log_create ("tp0.log","CLIENTE", 1, LOG_LEVEL_INFO) == NULL){
-		printf ("No pude crear el logger \n");
-		exit (1);
+	if (nuevo_logger == NULL){
+		perror ("Algo raro paso con el log. No se pudo crear o encontrar el archivo \n");
+		exit (EXIT_FAILURE);
 	}
 
 	return nuevo_logger;
@@ -78,10 +78,11 @@ t_log* iniciar_logger(void)
 
 t_config* iniciar_config(void)
 {
-	t_config* nuevo_config;
+	t_config* nuevo_config = config_create("./tp0.config");
 
-	if ((config = config_create("./tp0.config")) == NULL){
-		printf ("No pude leer la config \n");
+	if (nuevo_config == NULL){
+		perror ("Error al intentar cargar la config \n");
+		exit (EXIT_FAILURE);
 	}
 
 	return nuevo_config;
@@ -98,13 +99,13 @@ void leer_consola(t_log* logger)
 	// La primera te la dejo de yapa
 		leido = readline("> ");
 		log_info (logger, ">> %s", leido);
-	} while (strcmp (leido, "") != 0)
+	} while (strcmp (leido, "") != 0);
 }
 
 void paquete(int conexion)
 {
 	// Ahora toca lo divertido!
-	char* leido == NULL;
+	char* leido = NULL;
 	t_paquete* paquete = crear_paquete ();
 
 	// Leemos y esta vez agregamos las lineas al paquete
