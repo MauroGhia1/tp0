@@ -51,7 +51,7 @@ int main(void)
 	leer_consola(logger);
 	
 	// Enviamos al servidor el valor de CLAVE como mensaje
-	enviar_mensaje ("Hola como andas", conexion);
+	enviar_mensaje (valor, conexion);
 
 	// Armamos y enviamos el paquete
 	paquete(conexion);
@@ -61,7 +61,7 @@ int main(void)
 	/*---------------------------------------------------PARTE 5-------------------------------------------------------------*/
 	// Proximamente
 
-	printf ("\nCLIENTE CERRADO");
+	printf ("\nCLIENTE CERRADO!!");
 }
 
 t_log* iniciar_logger(void)
@@ -91,15 +91,18 @@ t_config* iniciar_config(void)
 void leer_consola(t_log* logger)
 {
 	char* leido;
-
+// La primera te la dejo de yapa
+	leido = readline("> ");
+	log_info (logger, ">> %s", leido);
+	
 // El resto, las vamos leyendo y logueando hasta recibir un string vacío
-	do {
-	// ¡No te olvides de liberar las lineas antes de regresar!
+	while (strcmp (leido, "") != 0){
 		free (leido);
-	// La primera te la dejo de yapa
 		leido = readline("> ");
 		log_info (logger, ">> %s", leido);
-	} while (strcmp (leido, "") != 0);
+	} 
+	// ¡No te olvides de liberar las lineas antes de regresar!
+	free (leido);
 }
 
 void paquete(int conexion)
